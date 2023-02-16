@@ -1,0 +1,24 @@
+name: Security
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  security-review:
+    name: Security Check
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Security Review
+        run: |
+          git clone https://github.com/ACCT-global/security-review-ci.git
+          cp security-review-ci/main.py .
+          rm -rf security-review-ci
+          python3 main.py
+          rm main.py
